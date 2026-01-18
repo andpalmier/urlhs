@@ -1,6 +1,0 @@
-5e2a335489ed19fa7016a72b71294adb5c0e44948d89bae3d2e36e03aaa5aa16  urlhs_0.0.0-SNAPSHOT-none_darwin_amd64.tar.gz
-fbf30d1d83a04aa8024d12a41bca0b8fbfffd94f0099eaa025c93ffd92fcad01  urlhs_0.0.0-SNAPSHOT-none_darwin_arm64.tar.gz
-2fcb339c28eaafdfffd6d998c47fbcac73d5a289ab2328089dd1d3b71678c570  urlhs_0.0.0-SNAPSHOT-none_linux_amd64.tar.gz
-47d40099689e4e1c258487ae372ed89efcf3ff583ea37fa6d6c816cd9812efb1  urlhs_0.0.0-SNAPSHOT-none_linux_arm64.tar.gz
-c513c356e9457f673a1f542d895c3f9a2c4c79eca9d825a40b55a6779d005b86  urlhs_0.0.0-SNAPSHOT-none_windows_amd64.zip
-12d833717108e8f269922573128e6254b5250ff353daa9937cad8e8856703674  urlhs_0.0.0-SNAPSHOT-none_windows_arm64.zip

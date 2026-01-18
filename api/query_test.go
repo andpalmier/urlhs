@@ -11,7 +11,7 @@ import (
 func TestClient_GetRecentURLs(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintln(w, `{
+		_, _ = fmt.Fprintln(w, `{
 			"query_status": "ok",
 			"urls": [
 				{
@@ -45,7 +45,7 @@ func TestClient_GetRecentURLs(t *testing.T) {
 func TestClient_GetRecentPayloads(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintln(w, `{
+		_, _ = fmt.Fprintln(w, `{
 			"query_status": "ok",
 			"payloads": [
 				{
@@ -78,7 +78,7 @@ func TestClient_GetRecentPayloads(t *testing.T) {
 func TestClient_QueryURL(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintln(w, `{
+		_, _ = fmt.Fprintln(w, `{
 			"query_status": "ok",
 			"id": "12345",
 			"url": "http://example.com/malware",
@@ -103,7 +103,7 @@ func TestClient_QueryURL(t *testing.T) {
 func TestClient_QueryTag(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintln(w, `{
+		_, _ = fmt.Fprintln(w, `{
 			"query_status": "ok",
 			"urls": [
 				{

@@ -1,0 +1,7 @@
+urlh
+.idea/
+.DS_Store
+.env
+coverage.out
+coverage.html
+urlhaus.html

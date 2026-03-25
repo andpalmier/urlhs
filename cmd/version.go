@@ -13,7 +13,7 @@ var (
 
 // executeVersion handles the 'version' subcommand
 func executeVersion(args []string) error {
-	fmt.Printf("urlh version %s\n", Version)
+	fmt.Printf("urlhs version %s\n", Version)
 	fmt.Printf("  commit: %s\n", Commit)
 	fmt.Printf("  built: %s\n", BuildDate)
 	return nil

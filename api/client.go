@@ -188,7 +188,9 @@ func (c *Client) MakeGetRequestRaw(ctx context.Context, endpoint string) (io.Rea
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		resp.Body.Close()
+		if closeErr := resp.Body.Close(); closeErr != nil {
+			return nil, fmt.Errorf("closing response body: %w", closeErr)
+		}
 		return nil, fmt.Errorf("API returned status %s", resp.Status)
 	}
 

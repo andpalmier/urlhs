@@ -21,7 +21,12 @@ func (c *Client) DownloadSample(ctx context.Context, sha256 string) error {
 	if err != nil {
 		return fmt.Errorf("error downloading sample: %w", err)
 	}
-	defer body.Close()
+	defer func() {
+		if closeErr := body.Close(); closeErr != nil {
+			// Log but don't fail - best effort cleanup
+			_ = closeErr
+		}
+	}()
 
 	// Read first 4 bytes to check for ZIP header
 	header := make([]byte, 4)
@@ -43,7 +48,12 @@ func (c *Client) DownloadSample(ctx context.Context, sha256 string) error {
 		if err != nil {
 			return fmt.Errorf("error creating file: %w", err)
 		}
-		defer out.Close()
+		defer func() {
+			if closeErr := out.Close(); closeErr != nil {
+				// Log but don't fail - best effort cleanup
+				_ = closeErr
+			}
+		}()
 
 		// Write the header we already read
 		if _, err := out.Write(header[:n]); err != nil {

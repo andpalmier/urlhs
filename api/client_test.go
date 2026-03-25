@@ -36,7 +36,9 @@ func TestClient_MakeRequest(t *testing.T) {
 					}
 				}
 				w.WriteHeader(http.StatusOK)
-				w.Write([]byte(`{"query_status":"ok"}`))
+				if _, err := w.Write([]byte(`{"query_status":"ok"}`)); err != nil {
+					t.Errorf("Failed to write response: %v", err)
+				}
 			}))
 			defer server.Close()
 

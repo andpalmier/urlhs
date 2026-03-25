@@ -21,8 +21,8 @@ func executeRecent(args []string) error {
 		fmt.Println("  -payloads          Query recent payloads")
 		fmt.Println("  -limit <number>    Limit the number of results (max 1000)")
 		fmt.Println("\nExamples:")
-		fmt.Println("  urlh recent -urls -limit 10")
-		fmt.Println("  urlh recent -payloads -limit 50")
+		fmt.Println("  urlhs recent -urls -limit 10")
+		fmt.Println("  urlhs recent -payloads -limit 50")
 	}
 
 	if len(args) < 1 {
@@ -97,10 +97,10 @@ func executeQuery(args []string) error {
 		fmt.Println("  -tag <tag>          Query URLs associated with a tag")
 		fmt.Println("  -signature <sig>    Query URLs associated with a malware signature")
 		fmt.Println("\nExamples:")
-		fmt.Println("  urlh query -tag Emotet")
-		fmt.Println("  urlh query -host example.com")
-		fmt.Println("  urlh query -signature Gozi")
-		fmt.Println("  urlh query -hash 12c8aec5766ac3e6f26f2505e2f4a8f2")
+		fmt.Println("  urlhs query -tag Emotet")
+		fmt.Println("  urlhs query -host example.com")
+		fmt.Println("  urlhs query -signature Gozi")
+		fmt.Println("  urlhs query -hash 12c8aec5766ac3e6f26f2505e2f4a8f2")
 	}
 
 	if len(args) < 1 {

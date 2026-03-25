@@ -55,7 +55,8 @@ func TestValidateTag(t *testing.T) {
 	}{
 		{"valid simple", "Emotet", false},
 		{"valid dots", "Win.Emotet", false},
-		{"valid underscore", "Win_Emotet", false},
+		{"valid dash", "Win-Emotet", false},
+		{"valid underscore NOT allowed per API", "Win_Emotet", true},
 		{"too short", "E", false},
 		{"too long", "ThisTagIsWayTooLongAndShouldDefinitelyFailBecauseItExceedsTheLimitOfSixtyFourCharactersWhichIsArbitraryButGood", true},
 		{"empty", "", true},

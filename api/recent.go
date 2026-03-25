@@ -25,6 +25,11 @@ func (c *Client) QueryRecentURLs(ctx context.Context, limit int) ([]URLEntry, er
 		return nil, fmt.Errorf("error parsing response: %w", err)
 	}
 
+	// Handle no_results as empty response, not an error
+	if resp.QueryStatus == "no_results" {
+		return []URLEntry{}, nil
+	}
+
 	if resp.QueryStatus != "ok" {
 		return nil, fmt.Errorf("API returned status: %s", resp.QueryStatus)
 	}
@@ -50,6 +55,11 @@ func (c *Client) QueryRecentPayloads(ctx context.Context, limit int) ([]Payload,
 	resp, err := ParseRecentPayloadsResponse([]byte(response))
 	if err != nil {
 		return nil, fmt.Errorf("error parsing response: %w", err)
+	}
+
+	// Handle no_results as empty response, not an error
+	if resp.QueryStatus == "no_results" {
+		return []Payload{}, nil
 	}
 
 	if resp.QueryStatus != "ok" {

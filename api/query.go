@@ -25,6 +25,11 @@ func (c *Client) QueryURL(ctx context.Context, url string) (*URLInfoResponse, er
 		return nil, fmt.Errorf("error parsing response: %w", err)
 	}
 
+	// Handle no_results as empty response, not an error
+	if resp.QueryStatus == "no_results" {
+		return nil, nil
+	}
+
 	if resp.QueryStatus != "ok" {
 		return nil, fmt.Errorf("API returned status: %s", resp.QueryStatus)
 	}
@@ -52,6 +57,11 @@ func (c *Client) QueryURLID(ctx context.Context, id string) (*URLInfoResponse, e
 		return nil, fmt.Errorf("error parsing response: %w", err)
 	}
 
+	// Handle no_results as empty response, not an error
+	if resp.QueryStatus == "no_results" {
+		return nil, nil
+	}
+
 	if resp.QueryStatus != "ok" {
 		return nil, fmt.Errorf("API returned status: %s", resp.QueryStatus)
 	}
@@ -77,6 +87,11 @@ func (c *Client) QueryHost(ctx context.Context, host string) (*HostInfoResponse,
 	resp, err := ParseHostInfoResponse([]byte(response))
 	if err != nil {
 		return nil, fmt.Errorf("error parsing response: %w", err)
+	}
+
+	// Handle no_results as empty response, not an error
+	if resp.QueryStatus == "no_results" {
+		return nil, nil
 	}
 
 	if resp.QueryStatus != "ok" {
@@ -114,6 +129,11 @@ func (c *Client) QueryPayload(ctx context.Context, hash string) (*PayloadInfoRes
 		return nil, fmt.Errorf("error parsing response: %w", err)
 	}
 
+	// Handle no_results as empty response, not an error
+	if resp.QueryStatus == "no_results" {
+		return nil, nil
+	}
+
 	if resp.QueryStatus != "ok" {
 		return nil, fmt.Errorf("API returned status: %s", resp.QueryStatus)
 	}
@@ -141,6 +161,11 @@ func (c *Client) QueryTag(ctx context.Context, tag string) (*TagInfoResponse, er
 		return nil, fmt.Errorf("error parsing response: %w", err)
 	}
 
+	// Handle no_results as empty response, not an error
+	if resp.QueryStatus == "no_results" {
+		return nil, nil
+	}
+
 	if resp.QueryStatus != "ok" {
 		return nil, fmt.Errorf("API returned status: %s", resp.QueryStatus)
 	}
@@ -166,6 +191,11 @@ func (c *Client) QuerySignature(ctx context.Context, signature string) (*Signatu
 	resp, err := ParseSignatureInfoResponse([]byte(response))
 	if err != nil {
 		return nil, fmt.Errorf("error parsing response: %w", err)
+	}
+
+	// Handle no_results as empty response, not an error
+	if resp.QueryStatus == "no_results" {
+		return nil, nil
 	}
 
 	if resp.QueryStatus != "ok" {

@@ -12,8 +12,9 @@ var sha256Regex = regexp.MustCompile(`^[a-fA-F0-9]{64}$`)
 // md5Regex matches valid MD5 hashes (32 hexadecimal characters)
 var md5Regex = regexp.MustCompile(`^[a-fA-F0-9]{32}$`)
 
-// tagRegex matches valid tags (alphanumeric, dots, dashes, underscores)
-var tagRegex = regexp.MustCompile(`^[A-Za-z0-9.\-_ ]+$`)
+// tagRegex matches valid tags (alphanumeric, dots, dashes, spaces)
+// Note: API documentation specifies [A-Za-z0-9.- ], underscores are NOT allowed
+var tagRegex = regexp.MustCompile(`^[A-Za-z0-9. -]+$`)
 
 // ValidateSHA256 checks if the input is a valid SHA256 hash
 func ValidateSHA256(hash string) error {
@@ -52,7 +53,7 @@ func ValidateTag(tag string) error {
 		return fmt.Errorf("tag too long: maximum 100 characters")
 	}
 	if !tagRegex.MatchString(tag) {
-		return fmt.Errorf("invalid tag: only alphanumeric characters, dots, dashes, underscores, and spaces allowed")
+		return fmt.Errorf("invalid tag: only alphanumeric characters, dots, dashes, and spaces allowed")
 	}
 	return nil
 }

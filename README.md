@@ -8,7 +8,7 @@ A command-line client for the [URLhaus API](https://urlhaus-api.abuse.ch/). It l
 > - [yrfy](https://github.com/andpalmier/yrfy) for YARAify, YARA scanning
 > - [mbzr](https://github.com/andpalmier/mbzr) for MalwareBazaar, malware samples
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/andpalmier/urlhs)](https://goreportcard.com/report/github.com/andpalmier/urlhs)
+[![CI](https://github.com/andpalmier/urlhs/actions/workflows/ci.yml/badge.svg)](https://github.com/andpalmier/urlhs/actions/workflows/ci.yml)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
 ## Features

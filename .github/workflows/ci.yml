@@ -62,9 +62,9 @@ jobs:
       # Running the binary GoReleaser just built is what catches that.
       - name: Assert the release build stamps its version
         run: |
-          bin=$(find dist -type f -name urlhs -perm -u+x | head -n1)
+          bin=$(find dist -type f -path '*linux_amd64*' -name urlhs -perm -u+x | head -n1)
           if [ -z "$bin" ]; then
-            echo "::error::no urlhs binary found under dist/"
+            echo "::error::no linux/amd64 urlhs binary found under dist/"
             exit 1
           fi
           out=$("$bin" version)

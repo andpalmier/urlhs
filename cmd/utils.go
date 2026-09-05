@@ -96,11 +96,6 @@ func printUsageHeader(command, description string) {
 	fmt.Println(description)
 }
 
-// printWarning prints a non-fatal warning
-func printWarning(message string) {
-	fmt.Fprintf(os.Stderr, "Warning: %s\n", message)
-}
-
 // reportNoResults tells the user the query succeeded but matched nothing.
 // URLhaus answers no_results, which is not a failure, so this goes to stderr
 // and the command still exits 0.

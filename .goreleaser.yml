@@ -22,9 +22,9 @@ builds:
       - arm64
     ldflags:
       - -s -w
-      - -X main.version={{.Version}}
-      - -X main.commit={{.ShortCommit}}
-      - -X main.date={{.Date}}
+      - -X github.com/andpalmier/urlhs/cmd.Version={{.Version}}
+      - -X github.com/andpalmier/urlhs/cmd.Commit={{.ShortCommit}}
+      - -X github.com/andpalmier/urlhs/cmd.BuildDate={{.Date}}
 
 archives:
   - id: default

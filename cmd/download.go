@@ -9,14 +9,15 @@ import (
 func executeDownload(args []string) error {
 	downloadCmd := flag.NewFlagSet("download", flag.ExitOnError)
 	sha256 := downloadCmd.String("sha256", "", "SHA256 hash of the file to download")
+	out := downloadCmd.String("out", "", "Path to write the sample to (default: <sha256>.zip)")
 
 	downloadCmd.Usage = func() {
 		printUsageHeader("download", "Downloads a malware sample by its SHA256 hash from URLhaus.")
 		fmt.Println("\nFlags:")
 		fmt.Println("  -sha256 <sha256_hash>    SHA256 hash of the file to download")
+		fmt.Println("  -out <path>              Path to write the sample to (default: <sha256>.zip)")
 		fmt.Println("\nNote:")
-		fmt.Println("  The downloaded file is saved as <sha256>.zip")
-		fmt.Println("  The ZIP archive is NOT password protected and may trigger antivirus alerts!")
+		fmt.Println("  The ZIP archive is NOT password protected and may trigger antivirus alerts.")
 	}
 
 	if err := downloadCmd.Parse(args); err != nil {
@@ -33,18 +34,18 @@ func executeDownload(args []string) error {
 	client, err := getAPIClient()
 	if err != nil {
 		printDetailedError(err, "Failed to create API client")
-		return fmt.Errorf("URLHAUS_API_KEY environment variable is required for downloading samples")
+		return err
 	}
 
 	ctx, cancel := getContext()
 	defer cancel()
 
-	err = client.DownloadSample(ctx, *sha256)
+	path, err := client.DownloadSample(ctx, *sha256, *out)
 	if err != nil {
 		printDetailedError(err, fmt.Sprintf("Failed to download sample: %s", *sha256))
 		return err
 	}
 
-	printSuccess(fmt.Sprintf("File downloaded successfully: %s.zip", *sha256))
+	printSuccess(fmt.Sprintf("File downloaded successfully: %s", path))
 	return nil
 }

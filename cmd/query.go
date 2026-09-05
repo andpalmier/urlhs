@@ -154,6 +154,10 @@ func executeQuery(args []string) error {
 			printDetailedError(err, "Failed to query URL")
 			return err
 		}
+		if result == nil {
+			reportNoResults("URL", *url)
+			return nil
+		}
 		printJSON(result)
 
 	case "urlid":
@@ -161,6 +165,10 @@ func executeQuery(args []string) error {
 		if err != nil {
 			printDetailedError(err, "Failed to query URL ID")
 			return err
+		}
+		if result == nil {
+			reportNoResults("URL ID", *urlid)
+			return nil
 		}
 		printJSON(result)
 
@@ -170,6 +178,10 @@ func executeQuery(args []string) error {
 			printDetailedError(err, "Failed to query host")
 			return err
 		}
+		if result == nil {
+			reportNoResults("host", *host)
+			return nil
+		}
 		printJSON(result)
 
 	case "hash":
@@ -177,6 +189,10 @@ func executeQuery(args []string) error {
 		if err != nil {
 			printDetailedError(err, "Failed to query payload")
 			return err
+		}
+		if result == nil {
+			reportNoResults("payload hash", *hash)
+			return nil
 		}
 		printJSON(result)
 
@@ -186,6 +202,10 @@ func executeQuery(args []string) error {
 			printDetailedError(err, "Failed to query tag")
 			return err
 		}
+		if result == nil {
+			reportNoResults("tag", *tag)
+			return nil
+		}
 		printJSON(result)
 
 	case "signature":
@@ -193,6 +213,10 @@ func executeQuery(args []string) error {
 		if err != nil {
 			printDetailedError(err, "Failed to query signature")
 			return err
+		}
+		if result == nil {
+			reportNoResults("signature", *signature)
+			return nil
 		}
 		printJSON(result)
 

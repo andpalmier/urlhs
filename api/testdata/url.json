@@ -1,0 +1,40 @@
+{
+  "blacklists": {
+    "spamhaus_dbl": "not listed",
+    "surbl": "not listed"
+  },
+  "date_added": "2026-09-05 10:21:14 UTC",
+  "host": "123.10.15.71",
+  "id": "3912664",
+  "larted": "true",
+  "last_online": null,
+  "payloads": [
+    {
+      "file_type": "elf",
+      "filename": "bin.sh",
+      "firstseen": "2026-09-05",
+      "imphash": null,
+      "response_md5": "59ce0baba11893f90527fc951ac69912",
+      "response_sha256": "4293c1d8574dc87c58360d6bac3daa182f64f7785c9d41da5e0741d2b1817fc7",
+      "response_size": "135784",
+      "signature": "Mozi",
+      "ssdeep": "3072:phNlHuBafLeBtfCzpta8xlBIOdVo3/4sxLJ10xioP:p3lOYoaja8xzx/0wsxzSi2",
+      "tlsh": "E5D3128BEF36DC1ECF001EB226DA5B9E9C6D756B41CBF0A4B9C1818F13A01C97D52215",
+      "urlhaus_download": "https://urlhaus-api.abuse.ch/v1/download/4293c1d8574dc87c58360d6bac3daa182f64f7785c9d41da5e0741d2b1817fc7/",
+      "virustotal": null
+    }
+  ],
+  "query_status": "ok",
+  "reporter": "geenensp",
+  "tags": [
+    "32-bit",
+    "elf",
+    "mips",
+    "Mozi"
+  ],
+  "takedown_time_seconds": null,
+  "threat": "malware_download",
+  "url": "http://123.10.15.71:53206/bin.sh",
+  "url_status": "online",
+  "urlhaus_reference": "https://urlhaus.abuse.ch/url/3912664/"
+}

@@ -1,0 +1,55 @@
+{
+  "firstseen": "2018-03-20 09:41:03",
+  "lastseen": "2025-05-01 23:37:06",
+  "payload_count": "34757",
+  "query_status": "ok",
+  "url_count": "10367",
+  "urls": [
+    {
+      "file_size": "49836",
+      "file_type": "txt",
+      "filename": "na",
+      "firstseen": "2024-04-05",
+      "imphash": null,
+      "lastseen": "2024-04-05",
+      "magika": null,
+      "md5_hash": "a422118ec79cb4823c75d1db76ba8188",
+      "sha256_hash": "5d598e3afe8736c96f6d2cc0a6509b12e9fc15d45afc070e7e9d5bd68946335e",
+      "ssdeep": "1536:tggZn9tzOkkxbipnnA4QP6vYleT10uAuBK1:igd9tNnAjotAl",
+      "tlsh": "T1F923F177A327BA69196D2567F2B0BFC2EE1116CB8A11C41A38008AD447E7770D7BD8",
+      "url": "https://91.202.233.234/Tester/Rak/GR/L8.txt",
+      "url_id": "2802042",
+      "url_status": "offline",
+      "urlhaus_download": "https://urlhaus-api.abuse.ch/v1/download/5d598e3afe8736c96f6d2cc0a6509b12e9fc15d45afc070e7e9d5bd68946335e/",
+      "urlhaus_reference": "https://urlhaus.abuse.ch/url/2802042/",
+      "virustotal": {
+        "link": "https://www.virustotal.com/gui/file/5d598e3afe8736c96f6d2cc0a6509b12e9fc15d45afc070e7e9d5bd68946335e/detection/f-5d598e3",
+        "percent": "43.33",
+        "result": "26 / 60"
+      }
+    },
+    {
+      "file_size": "51200",
+      "file_type": "txt",
+      "filename": "na",
+      "firstseen": "2024-04-05",
+      "imphash": null,
+      "lastseen": "2024-04-05",
+      "magika": null,
+      "md5_hash": "6f13fce7da914a80f9b9e58cf8264006",
+      "sha256_hash": "da939debbc7d60ce6ccd27767d7c4256615e00912aa22a46ad2805bebe3427b1",
+      "ssdeep": "1536:YqY4zmaMqhM0ch9Q8/CgbPiDvqAPI4uGp7:YIzmeRodpiDrg4D",
+      "tlsh": "T13333F1373A6208C24E2EA565F015EFDCBD18BDCBF374DB70345168264A5A2C8EF194",
+      "url": "https://91.202.233.234/Tester/Rak/GR/Lx6.txt",
+      "url_id": "2802046",
+      "url_status": "offline",
+      "urlhaus_download": "https://urlhaus-api.abuse.ch/v1/download/da939debbc7d60ce6ccd27767d7c4256615e00912aa22a46ad2805bebe3427b1/",
+      "urlhaus_reference": "https://urlhaus.abuse.ch/url/2802046/",
+      "virustotal": {
+        "link": "https://www.virustotal.com/gui/file/da939debbc7d60ce6ccd27767d7c4256615e00912aa22a46ad2805bebe3427b1/detection/f-da939de",
+        "percent": "40.00",
+        "result": "24 / 60"
+      }
+    }
+  ]
+}

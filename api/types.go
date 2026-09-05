@@ -16,21 +16,21 @@ type RecentPayloadsResponse struct {
 
 // URLInfoResponse represents the response from the URL info endpoint
 type URLInfoResponse struct {
-	QueryStatus         string      `json:"query_status"`
-	ID                  json.Number `json:"id,omitempty"`
-	URLHausReference    string      `json:"urlhaus_reference,omitempty"`
-	URL                 string      `json:"url,omitempty"`
-	URLStatus           string      `json:"url_status,omitempty"`
-	Host                string      `json:"host,omitempty"`
-	DateAdded           string      `json:"date_added,omitempty"`
-	LastOnline          *string     `json:"last_online,omitempty"`
-	Threat              string      `json:"threat,omitempty"`
-	Blacklists          Blacklists  `json:"blacklists,omitempty"`
-	Reporter            string      `json:"reporter,omitempty"`
-	Larted              string      `json:"larted,omitempty"`
-	TakedownTimeSeconds *int        `json:"takedown_time_seconds,omitempty"`
-	Tags                []string    `json:"tags,omitempty"`
-	Payloads            []Payload   `json:"payloads,omitempty"`
+	QueryStatus         string       `json:"query_status"`
+	ID                  json.Number  `json:"id,omitempty"`
+	URLHausReference    string       `json:"urlhaus_reference,omitempty"`
+	URL                 string       `json:"url,omitempty"`
+	URLStatus           string       `json:"url_status,omitempty"`
+	Host                string       `json:"host,omitempty"`
+	DateAdded           string       `json:"date_added,omitempty"`
+	LastOnline          *string      `json:"last_online,omitempty"`
+	Threat              string       `json:"threat,omitempty"`
+	Blacklists          Blacklists   `json:"blacklists,omitempty"`
+	Reporter            string       `json:"reporter,omitempty"`
+	Larted              string       `json:"larted,omitempty"`
+	TakedownTimeSeconds *json.Number `json:"takedown_time_seconds,omitempty"`
+	Tags                []string     `json:"tags,omitempty"`
+	Payloads            []Payload    `json:"payloads,omitempty"`
 }
 
 // HostInfoResponse represents the response from the host info endpoint
@@ -60,6 +60,7 @@ type PayloadInfoResponse struct {
 	Imphash         string       `json:"imphash,omitempty"`
 	SSDeep          string       `json:"ssdeep,omitempty"`
 	TLSH            string       `json:"tlsh,omitempty"`
+	Magika          string       `json:"magika,omitempty"`
 	URLs            []PayloadURL `json:"urls,omitempty"`
 }
 
@@ -84,18 +85,18 @@ type SignatureInfoResponse struct {
 
 // URLEntry represents a URL entry from URLhaus
 type URLEntry struct {
-	ID                  json.Number `json:"id"`
-	URLHausReference    string      `json:"urlhaus_reference"`
-	URL                 string      `json:"url"`
-	URLStatus           string      `json:"url_status"`
-	Host                string      `json:"host"`
-	DateAdded           string      `json:"date_added"`
-	Threat              string      `json:"threat"`
-	Blacklists          Blacklists  `json:"blacklists,omitempty"`
-	Reporter            string      `json:"reporter"`
-	Larted              string      `json:"larted"`
-	TakedownTimeSeconds *int        `json:"takedown_time_seconds,omitempty"`
-	Tags                []string    `json:"tags,omitempty"`
+	ID                  json.Number  `json:"id"`
+	URLHausReference    string       `json:"urlhaus_reference"`
+	URL                 string       `json:"url"`
+	URLStatus           string       `json:"url_status"`
+	Host                string       `json:"host"`
+	DateAdded           string       `json:"date_added"`
+	Threat              string       `json:"threat"`
+	Blacklists          Blacklists   `json:"blacklists,omitempty"`
+	Reporter            string       `json:"reporter"`
+	Larted              string       `json:"larted"`
+	TakedownTimeSeconds *json.Number `json:"takedown_time_seconds,omitempty"`
+	Tags                []string     `json:"tags,omitempty"`
 }
 
 // Blacklists represents blacklist status from various sources
@@ -104,14 +105,19 @@ type Blacklists struct {
 	SURBL       string `json:"surbl"`
 }
 
-// Payload represents a payload/malware sample
+// Payload represents a payload/malware sample.
+//
+// The API spells the same three fields two different ways: /v1/url/ returns
+// response_md5, response_sha256 and response_size, while
+// /v1/payloads/recent/ returns md5_hash, sha256_hash and file_size.
+// UnmarshalJSON accepts either and normalises onto the documented names.
 type Payload struct {
 	FirstSeen       string      `json:"firstseen"`
-	Filename        string      `json:"filename"`
+	Filename        string      `json:"filename,omitempty"`
 	FileType        string      `json:"file_type"`
-	ResponseSize    string      `json:"response_size"`
-	ResponseMD5     string      `json:"response_md5"`
-	ResponseSHA256  string      `json:"response_sha256"`
+	FileSize        json.Number `json:"file_size,omitempty"`
+	MD5Hash         string      `json:"md5_hash"`
+	SHA256Hash      string      `json:"sha256_hash"`
 	URLHausDownload string      `json:"urlhaus_download"`
 	Signature       *string     `json:"signature"`
 	VirusTotal      *VirusTotal `json:"virustotal"`
@@ -119,6 +125,32 @@ type Payload struct {
 	SSDeep          string      `json:"ssdeep"`
 	TLSH            string      `json:"tlsh"`
 	Magika          string      `json:"magika,omitempty"`
+}
+
+// UnmarshalJSON accepts both spellings the API uses for a payload's hashes
+// and size.
+func (p *Payload) UnmarshalJSON(data []byte) error {
+	type payload Payload
+	aux := struct {
+		*payload
+		ResponseMD5    string      `json:"response_md5"`
+		ResponseSHA256 string      `json:"response_sha256"`
+		ResponseSize   json.Number `json:"response_size"`
+	}{payload: (*payload)(p)}
+
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	if p.MD5Hash == "" {
+		p.MD5Hash = aux.ResponseMD5
+	}
+	if p.SHA256Hash == "" {
+		p.SHA256Hash = aux.ResponseSHA256
+	}
+	if p.FileSize == "" {
+		p.FileSize = aux.ResponseSize
+	}
+	return nil
 }
 
 // PayloadURL represents a URL associated with a payload
@@ -129,17 +161,19 @@ type PayloadURL struct {
 	URLHausReference string `json:"urlhaus_reference"`
 	FirstSeen        string `json:"firstseen"`
 	LastSeen         string `json:"lastseen"`
+	Filename         string `json:"filename,omitempty"`
 }
 
 // TagURL represents a URL entry from tag query
 type TagURL struct {
-	URLID            string `json:"url_id"`
-	URL              string `json:"url"`
-	URLStatus        string `json:"url_status"`
-	DateAdded        string `json:"dateadded"`
-	Reporter         string `json:"reporter"`
-	Threat           string `json:"threat"`
-	URLHausReference string `json:"urlhaus_reference"`
+	URLID            string   `json:"url_id"`
+	URL              string   `json:"url"`
+	URLStatus        string   `json:"url_status"`
+	DateAdded        string   `json:"dateadded"`
+	Reporter         string   `json:"reporter"`
+	Threat           string   `json:"threat"`
+	URLHausReference string   `json:"urlhaus_reference"`
+	Tags             []string `json:"tags,omitempty"`
 }
 
 // SignatureURL represents a URL entry from signature query

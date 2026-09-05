@@ -30,8 +30,8 @@ func (c *Client) QueryURL(ctx context.Context, url string) (*URLInfoResponse, er
 		return nil, nil
 	}
 
-	if resp.QueryStatus != "ok" {
-		return nil, fmt.Errorf("API returned status: %s", resp.QueryStatus)
+	if err := newStatusError(resp.QueryStatus, "url"); err != nil {
+		return nil, err
 	}
 
 	return resp, nil
@@ -62,8 +62,8 @@ func (c *Client) QueryURLID(ctx context.Context, id string) (*URLInfoResponse, e
 		return nil, nil
 	}
 
-	if resp.QueryStatus != "ok" {
-		return nil, fmt.Errorf("API returned status: %s", resp.QueryStatus)
+	if err := newStatusError(resp.QueryStatus, "urlid"); err != nil {
+		return nil, err
 	}
 
 	return resp, nil
@@ -94,8 +94,8 @@ func (c *Client) QueryHost(ctx context.Context, host string) (*HostInfoResponse,
 		return nil, nil
 	}
 
-	if resp.QueryStatus != "ok" {
-		return nil, fmt.Errorf("API returned status: %s", resp.QueryStatus)
+	if err := newStatusError(resp.QueryStatus, "host"); err != nil {
+		return nil, err
 	}
 
 	return resp, nil
@@ -134,8 +134,8 @@ func (c *Client) QueryPayload(ctx context.Context, hash string) (*PayloadInfoRes
 		return nil, nil
 	}
 
-	if resp.QueryStatus != "ok" {
-		return nil, fmt.Errorf("API returned status: %s", resp.QueryStatus)
+	if err := newStatusError(resp.QueryStatus, "payload"); err != nil {
+		return nil, err
 	}
 
 	return resp, nil
@@ -166,8 +166,8 @@ func (c *Client) QueryTag(ctx context.Context, tag string) (*TagInfoResponse, er
 		return nil, nil
 	}
 
-	if resp.QueryStatus != "ok" {
-		return nil, fmt.Errorf("API returned status: %s", resp.QueryStatus)
+	if err := newStatusError(resp.QueryStatus, "tag"); err != nil {
+		return nil, err
 	}
 
 	return resp, nil
@@ -198,8 +198,8 @@ func (c *Client) QuerySignature(ctx context.Context, signature string) (*Signatu
 		return nil, nil
 	}
 
-	if resp.QueryStatus != "ok" {
-		return nil, fmt.Errorf("API returned status: %s", resp.QueryStatus)
+	if err := newStatusError(resp.QueryStatus, "signature"); err != nil {
+		return nil, err
 	}
 
 	return resp, nil

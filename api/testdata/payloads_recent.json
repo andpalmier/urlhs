@@ -1,0 +1,33 @@
+{
+  "payloads": [
+    {
+      "file_size": 27383,
+      "file_type": "html",
+      "firstseen": "2026-09-05 10:23:00",
+      "imphash": null,
+      "magika": "html",
+      "md5_hash": "7518d12fcaa54fa8f66342aaccdfd650",
+      "sha256_hash": "a2c71013288b92e9a1bf1e9e967fad93e3a8acfa0b8ce4f59466d490cfcbd152",
+      "signature": null,
+      "ssdeep": "384:PjArYiGhmZSww0qTfBAOVgmAyhtbgtl+u/cj1IO/5/9SLodwofyAvywoAy0IULKk:wZBsjBjrAyhtbgt4MiIO/5/9SLodYHQZ",
+      "tlsh": "T1CCC2A45442F20825455320359EBF6F4876758A23694CEC08BD8C9580BFAEDB78DF7B",
+      "urlhaus_download": "https://urlhaus-api.abuse.ch/v1/download/a2c71013288b92e9a1bf1e9e967fad93e3a8acfa0b8ce4f59466d490cfcbd152/",
+      "virustotal": null
+    },
+    {
+      "file_size": 31797,
+      "file_type": "html",
+      "firstseen": "2026-09-05 10:21:46",
+      "imphash": null,
+      "magika": "html",
+      "md5_hash": "7b9ed2cd0a0662855184c6b235f5223a",
+      "sha256_hash": "d062f2053a390e6f55f3c2bd3b640093730fd394a076366f4ccc280246c8b149",
+      "signature": null,
+      "ssdeep": "384:0IakirSeo5DpNJ/FssDYNDwVRaoT9vD/Mgbo2ej/uR5WFdzJCIo6YnbxWEA7i:6Seo5XssDYDwVRaoTNP6FdzkIGbxWEci",
+      "tlsh": "T1C8E22A3132F1257D924B416F36BDEB1CB1A4A270D95E4874E1FC9C1C6A8AEA10772F",
+      "urlhaus_download": "https://urlhaus-api.abuse.ch/v1/download/d062f2053a390e6f55f3c2bd3b640093730fd394a076366f4ccc280246c8b149/",
+      "virustotal": null
+    }
+  ],
+  "query_status": "ok"
+}

@@ -1,0 +1,42 @@
+{
+  "blacklists": {
+    "spamhaus_dbl": "not listed",
+    "surbl": "not listed"
+  },
+  "firstseen": "2019-01-15 07:09:01 UTC",
+  "host": "vektorex.com",
+  "query_status": "ok",
+  "url_count": "124",
+  "urlhaus_reference": "https://urlhaus.abuse.ch/host/vektorex.com/",
+  "urls": [
+    {
+      "date_added": "2019-02-14 18:02:23 UTC",
+      "id": "124617",
+      "larted": "true",
+      "reporter": "JayTHL",
+      "tags": [
+        "Loki"
+      ],
+      "takedown_time_seconds": "46393",
+      "threat": "malware_download",
+      "url": "http://vektorex.com/jobs/cgi/86010322.jpg",
+      "url_status": "offline",
+      "urlhaus_reference": "https://urlhaus.abuse.ch/url/124617/"
+    },
+    {
+      "date_added": "2019-02-14 06:39:08 UTC",
+      "id": "124195",
+      "larted": "true",
+      "reporter": "abuse_ch",
+      "tags": [
+        "AZORult",
+        "exe"
+      ],
+      "takedown_time_seconds": "1681",
+      "threat": "malware_download",
+      "url": "http://vektorex.com/jobs/cgi/25061013.png",
+      "url_status": "offline",
+      "urlhaus_reference": "https://urlhaus.abuse.ch/url/124195/"
+    }
+  ]
+}

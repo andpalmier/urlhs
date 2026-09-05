@@ -1,0 +1,28 @@
+{
+  "file_size": "27383",
+  "file_type": "html",
+  "firstseen": "2026-09-05 10:23:00",
+  "imphash": null,
+  "lastseen": null,
+  "magika": "html",
+  "md5_hash": "7518d12fcaa54fa8f66342aaccdfd650",
+  "query_status": "ok",
+  "sha256_hash": "a2c71013288b92e9a1bf1e9e967fad93e3a8acfa0b8ce4f59466d490cfcbd152",
+  "signature": null,
+  "ssdeep": "384:PjArYiGhmZSww0qTfBAOVgmAyhtbgtl+u/cj1IO/5/9SLodwofyAvywoAy0IULKk:wZBsjBjrAyhtbgt4MiIO/5/9SLodYHQZ",
+  "tlsh": "T1CCC2A45442F20825455320359EBF6F4876758A23694CEC08BD8C9580BFAEDB78DF7B",
+  "url_count": "1",
+  "urlhaus_download": "https://urlhaus-api.abuse.ch/v1/download/a2c71013288b92e9a1bf1e9e967fad93e3a8acfa0b8ce4f59466d490cfcbd152/",
+  "urls": [
+    {
+      "filename": "subgroup.php",
+      "firstseen": "2026-09-05",
+      "lastseen": null,
+      "url": "http://PEDIANOW.ORG/subgroup.php",
+      "url_id": "1392078",
+      "url_status": "online",
+      "urlhaus_reference": "https://urlhaus.abuse.ch/url/1392078/"
+    }
+  ],
+  "virustotal": null
+}

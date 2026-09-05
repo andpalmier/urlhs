@@ -30,8 +30,8 @@ func (c *Client) QueryRecentURLs(ctx context.Context, limit int) ([]URLEntry, er
 		return []URLEntry{}, nil
 	}
 
-	if resp.QueryStatus != "ok" {
-		return nil, fmt.Errorf("API returned status: %s", resp.QueryStatus)
+	if err := newStatusError(resp.QueryStatus, "urls/recent"); err != nil {
+		return nil, err
 	}
 
 	return resp.URLs, nil
@@ -62,8 +62,8 @@ func (c *Client) QueryRecentPayloads(ctx context.Context, limit int) ([]Payload,
 		return []Payload{}, nil
 	}
 
-	if resp.QueryStatus != "ok" {
-		return nil, fmt.Errorf("API returned status: %s", resp.QueryStatus)
+	if err := newStatusError(resp.QueryStatus, "payloads/recent"); err != nil {
+		return nil, err
 	}
 
 	return resp.Payloads, nil

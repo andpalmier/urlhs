@@ -23,8 +23,10 @@ A command-line tool for interacting with the [URLhaus API](https://urlhaus-api.a
 ### Using Homebrew
 
 ```bash
-brew install andpalmier/tap/urlhs
+brew install --cask andpalmier/tap/urlhs
 ```
+
+Homebrew casks are macOS only. On Linux, use `go install` or a pre-built binary.
 
 ### Using Go
 

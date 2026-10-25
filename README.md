@@ -1,6 +1,6 @@
 # urlhs - URLhaus CLI client
 
-A command-line client for the [URLhaus API](https://urlhaus-api.abuse.ch/). It looks up malware URLs, hosts, payloads, tags and signatures, and downloads the samples URLhaus has collected.
+A command-line client for the [URLhaus API](https://urlhaus-api.abuse.ch/). It looks up malware URLs, hosts, payloads, tags and signatures, downloads the samples and bulk data exports URLhaus publishes, and reports new malware URLs.
 
 > Part of the abuse.ch CLI toolkit, a set of clients for [abuse.ch](https://abuse.ch) services:
 > - [urlhs](https://github.com/andpalmier/urlhs) for URLhaus, the malware URL database
@@ -61,7 +61,7 @@ export ABUSECH_API_KEY="your_api_key_here"
 urlhs recent -urls -limit 10
 ```
 
-Every command reads the key from `ABUSECH_API_KEY`. When the API refuses a request, urlhs prints the reason it gave rather than a bare status code. A query that simply matched nothing says so on stderr and still exits 0.
+Every command reads the key from `ABUSECH_API_KEY`. When the API refuses a request, urlhs prints the reason it gave. A query that simply matched nothing says so on stderr and still exits 0.
 
 ## Usage
 
@@ -83,6 +83,8 @@ These go before the command name.
 | `recent` | List recently added URLs or payloads |
 | `query` | Look up a URL, host, payload, tag or signature |
 | `download` | Fetch a payload by SHA256 hash |
+| `export` | Download a bulk data export |
+| `submit` | Report malware distribution URLs |
 | `version` | Print version information |
 
 ### Recent additions
@@ -134,6 +136,38 @@ Without `-out` the file is written to `<sha256>.zip` in the current directory, a
 
 Unlike MalwareBazaar, URLhaus does not password protect these archives. Your antivirus will most likely quarantine the file the moment it lands, so download somewhere you have excluded from scanning.
 
+### Bulk exports
+
+```bash
+# List the export files and what each one holds
+urlhs export -h
+
+# Hostnames serving malware, in hosts file format
+urlhs export -file hostfile.txt
+
+# The full dump takes longer than the default timeout allows
+urlhs -t 10m export -file full.csv.zip -out /tmp/urlhaus.csv.zip
+```
+
+URLhaus publishes CSV and JSON dumps of recent, online and all URLs, plain URL lists, a hosts file, a DNS RPZ zone, a Snort/Suricata ruleset, ClamAV signatures, and a list of every payload it has collected. abuse.ch rebuilds them every five minutes, so fetching more often gets you the same file.
+
+The timeout covers the whole download. Most exports are tens of megabytes and `payload.csv.zip` is around 800 MB, so raise `-t` for anything but the small text files. Without `-out` the file keeps its export name, and urlhs will not overwrite a file that already exists.
+
+abuse.ch expects the API key inside the export URL. urlhs strips the URL from its error messages so the key does not end up in your logs.
+
+### Submitting URLs
+
+Read the [submission policy](https://urlhaus.abuse.ch/api/#submit) first. URLhaus only takes URLs that are online and serving a malware payload. Phishing pages, adware and URL shorteners get deleted.
+
+```bash
+urlhs submit -url http://evil.example/payload.exe -tags exe,AgentTesla
+
+# Several URLs at once, with your handle hidden
+urlhs submit -url http://evil.example/a.exe -url http://evil.example/b.doc -anonymous
+```
+
+The tags apply to every URL in the submission and may contain letters, digits, dots, dashes and spaces. URLhaus has to know your abuse.ch account before it accepts submissions. If urlhs says it does not, log in once at [urlhaus.abuse.ch](https://urlhaus.abuse.ch/login/) and try again. The API does not document its replies, so urlhs prints whatever URLhaus answers.
+
 ### Running in a container
 
 ```bash
@@ -144,7 +178,7 @@ podman run --rm -e ABUSECH_API_KEY="your_key" ghcr.io/andpalmier/urlhs recent -u
 container run --rm -e ABUSECH_API_KEY="your_key" ghcr.io/andpalmier/urlhs recent -urls -limit 10
 ```
 
-Downloads need a mounted volume, otherwise the sample disappears with the container:
+Downloads and exports need a mounted volume, otherwise the file disappears with the container:
 
 ```bash
 docker run --rm -e ABUSECH_API_KEY="your_key" -v $(pwd):/data ghcr.io/andpalmier/urlhs download -sha256 <hash> -out /data/sample.zip

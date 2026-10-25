@@ -53,6 +53,10 @@ func Execute() error {
 		return executeQuery(args[1:])
 	case "download":
 		return executeDownload(args[1:])
+	case "export":
+		return executeExport(args[1:])
+	case "submit":
+		return executeSubmit(args[1:])
 	default:
 		printError(fmt.Sprintf("unknown subcommand '%s'", args[0]))
 		printRootHelp()

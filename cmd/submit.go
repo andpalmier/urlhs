@@ -54,8 +54,10 @@ func executeSubmit(args []string) error {
 	}
 
 	var tagList []string
-	if *tags != "" {
-		tagList = strings.Split(*tags, ",")
+	for _, tag := range strings.Split(*tags, ",") {
+		if tag = strings.TrimSpace(tag); tag != "" {
+			tagList = append(tagList, tag)
+		}
 	}
 
 	client, err := getAPIClient()

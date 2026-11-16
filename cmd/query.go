@@ -113,22 +113,31 @@ func executeQuery(args []string) error {
 		return err
 	}
 
-	// Map flags to their values
-	queryParams := map[string]*string{
-		"url":       url,
-		"urlid":     urlid,
-		"host":      host,
-		"hash":      hash,
-		"tag":       tag,
-		"signature": signature,
+	// Keep the flags ordered so multiple matches are rejected deterministically.
+	queryParams := []struct {
+		name  string
+		value string
+	}{
+		{"url", *url},
+		{"urlid", *urlid},
+		{"host", *host},
+		{"hash", *hash},
+		{"tag", *tag},
+		{"signature", *signature},
 	}
 
 	var selectedQuery string
-	for key, val := range queryParams {
-		if *val != "" {
-			selectedQuery = key
-			break
+	for _, p := range queryParams {
+		if p.value == "" {
+			continue
 		}
+		if selectedQuery != "" {
+			printError("specify only one query parameter")
+			queryCmd.Usage()
+			fmt.Println()
+			return fmt.Errorf("multiple query parameters")
+		}
+		selectedQuery = p.name
 	}
 
 	if selectedQuery == "" {

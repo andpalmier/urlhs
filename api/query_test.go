@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"sync/atomic"
 	"testing"
 )
 
@@ -183,5 +184,27 @@ func TestTakedownTimeBothForms(t *testing.T) {
 		if e.TakedownTimeSeconds == nil || e.TakedownTimeSeconds.String() != "46393" {
 			t.Errorf("%s decoded to %v", body, e.TakedownTimeSeconds)
 		}
+	}
+}
+
+func TestRecentRejectsNegativeLimitBeforeNetwork(t *testing.T) {
+	var requests atomic.Int32
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requests.Add(1)
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = fmt.Fprint(w, `{"query_status":"ok"}`)
+	}))
+	defer server.Close()
+
+	c := NewClient("test-key", WithBaseURL(server.URL+"/"))
+	ctx := context.Background()
+	if _, err := c.QueryRecentURLs(ctx, -1); err == nil {
+		t.Error("QueryRecentURLs accepted a negative limit")
+	}
+	if _, err := c.QueryRecentPayloads(ctx, -1); err == nil {
+		t.Error("QueryRecentPayloads accepted a negative limit")
+	}
+	if got := requests.Load(); got != 0 {
+		t.Errorf("API was contacted %d times for negative limits", got)
 	}
 }

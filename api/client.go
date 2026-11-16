@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -24,6 +25,7 @@ type Client struct {
 	httpClient *http.Client
 	interval   time.Duration
 	lastReq    time.Time
+	mu         sync.Mutex // Protects lastReq for thread-safe rate limiting
 }
 
 // Option configures the Client
@@ -64,6 +66,8 @@ func NewClient(apiKey string, options ...Option) *Client {
 
 // wait handles simple rate limiting
 func (c *Client) wait() {
+	c.mu.Lock()
+	defer c.mu.Unlock()
 	elapsed := time.Since(c.lastReq)
 	if elapsed < c.interval {
 		time.Sleep(c.interval - elapsed)

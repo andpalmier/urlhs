@@ -1,4 +1,3 @@
-urlh
 urlhs
 .idea/
 .DS_Store
@@ -7,3 +6,5 @@ coverage.out
 coverage.html
 urlhaus.html
 urlhaus
+dist/
+urlhaus_recent.json

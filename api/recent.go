@@ -8,7 +8,7 @@ import (
 // QueryRecentURLs retrieves recently added URLs from URLhaus
 func (c *Client) QueryRecentURLs(ctx context.Context, limit int) ([]URLEntry, error) {
 	endpoint := "urls/recent/"
-	if limit > 0 {
+	if limit != 0 {
 		if err := ValidateLimit(limit); err != nil {
 			return nil, err
 		}
@@ -40,7 +40,7 @@ func (c *Client) QueryRecentURLs(ctx context.Context, limit int) ([]URLEntry, er
 // QueryRecentPayloads retrieves recently added payloads from URLhaus
 func (c *Client) QueryRecentPayloads(ctx context.Context, limit int) ([]Payload, error) {
 	endpoint := "payloads/recent/"
-	if limit > 0 {
+	if limit != 0 {
 		if err := ValidateLimit(limit); err != nil {
 			return nil, err
 		}

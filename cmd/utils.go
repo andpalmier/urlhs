@@ -62,7 +62,7 @@ func printRootHelp() {
 	fmt.Println("  urlhs export -file hostfile.txt")
 	fmt.Println()
 	fmt.Println("Environment Variables:")
-	fmt.Println("  ABUSECH_API_KEY    Your abuse.ch API key (required)")
+	fmt.Println("  ABUSECH_API_KEY    Your abuse.ch API key (required except query)")
 	fmt.Println("                     Get one at https://auth.abuse.ch/")
 	fmt.Println()
 	fmt.Println("For more information about a command:")
@@ -160,13 +160,11 @@ func printSuccess(message string) {
 
 // printJSON prints data as indented JSON
 func printJSON(data interface{}) {
-	b, err := json.MarshalIndent(data, "", "    ")
-	if err != nil {
-		// Fallback to standard JSON if coloring fails
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", "    ")
+	if err := enc.Encode(data); err != nil {
 		fmt.Printf("%+v\n", data)
-		return
 	}
-	fmt.Println(string(b))
 }
 
 // SetTimeout sets the per-request timeout

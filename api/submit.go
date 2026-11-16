@@ -26,14 +26,17 @@ type SubmitOptions struct {
 // it rejects a request. The replies are not documented; these were observed
 // against the live API. One answer can carry a reply per URL, run together,
 // e.g. "illegal_threat: xillegal_url".
-var submitErrors = map[string]string{
-	"no_auth_key":      "no API key was sent: set ABUSECH_API_KEY",
-	"unknown_auth_key": "the API key was not accepted: check ABUSECH_API_KEY",
-	"user_unknown":     "your abuse.ch account is not known to URLhaus yet: log in once at https://urlhaus.abuse.ch/login/",
-	"invalid_json":     "the API could not parse the submission",
-	"no_data":          "the submission contained no URLs",
-	"illegal_url":      "URLhaus rejected a URL as malformed",
-	"illegal_threat":   "URLhaus rejected the threat type",
+var submitErrors = []struct {
+	token string
+	msg   string
+}{
+	{"no_auth_key", "no API key was sent: set ABUSECH_API_KEY"},
+	{"unknown_auth_key", "the API key was not accepted: check ABUSECH_API_KEY"},
+	{"user_unknown", "your abuse.ch account is not known to URLhaus yet: log in once at https://urlhaus.abuse.ch/login/"},
+	{"invalid_json", "the API could not parse the submission"},
+	{"no_data", "the submission contained no URLs"},
+	{"illegal_url", "URLhaus rejected a URL as malformed"},
+	{"illegal_threat", "URLhaus rejected the threat type"},
 }
 
 // SubmitURLs reports malware distribution URLs to URLhaus and returns the
@@ -98,16 +101,23 @@ func (c *Client) SubmitURLs(ctx context.Context, opts SubmitOptions) (string, er
 		return "", fmt.Errorf("API returned status %s", resp.Status)
 	}
 
-	body, err := io.ReadAll(io.LimitReader(resp.Body, maxResponseSize))
+	body, err := io.ReadAll(io.LimitReader(resp.Body, maxResponseSize+1))
 	if err != nil {
 		return "", fmt.Errorf("reading response: %w", err)
 	}
+	if len(body) > maxResponseSize {
+		return "", fmt.Errorf("response too large: exceeded %d bytes", maxResponseSize)
+	}
 
 	answer := strings.TrimSpace(string(body))
-	for token, msg := range submitErrors {
-		if strings.Contains(answer, token) {
-			return "", fmt.Errorf("%s (URLhaus answered: %s)", msg, answer)
+	var problems []string
+	for _, e := range submitErrors {
+		if strings.Contains(answer, e.token) {
+			problems = append(problems, fmt.Sprintf("%s (URLhaus answered: %s)", e.msg, answer))
 		}
+	}
+	if len(problems) > 0 {
+		return "", fmt.Errorf("%s", strings.Join(problems, "; "))
 	}
 
 	return answer, nil

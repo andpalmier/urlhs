@@ -1,200 +1,66 @@
-# urlhs - URLhaus CLI client
+# urlhs
 
-A command-line client for the [URLhaus API](https://urlhaus-api.abuse.ch/). It looks up malware URLs, hosts, payloads, tags and signatures, downloads the samples and bulk data exports URLhaus publishes, and reports new malware URLs.
-
-> Part of the abuse.ch CLI toolkit, a set of clients for [abuse.ch](https://abuse.ch) services:
-> - [urlhs](https://github.com/andpalmier/urlhs) for URLhaus, the malware URL database
-> - [tfox](https://github.com/andpalmier/tfox) for ThreatFox, the IOC database
-> - [yrfy](https://github.com/andpalmier/yrfy) for YARAify, YARA scanning
-> - [mbzr](https://github.com/andpalmier/mbzr) for MalwareBazaar, malware samples
+CLI for the [URLhaus API](https://urlhaus-api.abuse.ch/). Look up malware URLs, hosts, and payloads, submit new URLs, and download bulk exports.
 
 [![CI](https://github.com/andpalmier/urlhs/actions/workflows/ci.yml/badge.svg)](https://github.com/andpalmier/urlhs/actions/workflows/ci.yml)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
-## Features
-
-- Built on the Go standard library, with no third party dependencies
-- Prints JSON, so you can pipe it into jq or anything else
-- Rate limits itself to 10 requests per second
-- Runs under Docker, Podman, and Apple container
-
-## Installation
-
-### Homebrew
+## Install
 
 ```bash
 brew install --cask andpalmier/tap/urlhs
-```
-
-Homebrew casks are macOS only. On Linux, use `go install` or a pre-built binary.
-
-### Go
-
-```bash
 go install github.com/andpalmier/urlhs@latest
-```
-
-### Container
-
-```bash
-# Pull the pre-built image
 docker pull ghcr.io/andpalmier/urlhs:latest
-
-# Or build it yourself
-docker build -t urlhs .
 ```
 
-### From source
-
-```bash
-git clone https://github.com/andpalmier/urlhs.git
-cd urlhs
-make build
-```
+Homebrew works on macOS only. On Linux, use Go or a release binary.
 
 ## Quick start
-
-Get an API key from the [abuse.ch Authentication Portal](https://auth.abuse.ch/), export it, then query something:
 
 ```bash
 export ABUSECH_API_KEY="your_api_key_here"
 urlhs recent -urls -limit 10
 ```
 
-Every command reads the key from `ABUSECH_API_KEY`. When the API refuses a request, urlhs prints the reason it gave. A query that simply matched nothing says so on stderr and still exits 0.
+`query` can work without an API key for public lookups. Other commands need `ABUSECH_API_KEY`.
 
-## Usage
+## Commands
 
-### Global flags
+- `recent`: list recently added URLs or payloads.
+- `query`: look up a URL, host, payload, tag, or signature.
+- `download`: fetch a payload by SHA256 hash.
+- `export`: download a bulk export.
+- `submit`: report malware distribution URLs.
+- `version`: print version information.
 
-These go before the command name.
-
-| Flag | Description |
-|------|-------------|
-| `-v`, `--verbose` | Print what the client is doing |
-| `-t`, `--timeout` | Timeout per request, as a duration such as `45s` or `2m` (default `30s`) |
-| `-V`, `--version` | Print version information |
-| `-h`, `--help` | Print help |
-
-### Commands
-
-| Command | Description |
-|---------|-------------|
-| `recent` | List recently added URLs or payloads |
-| `query` | Look up a URL, host, payload, tag or signature |
-| `download` | Fetch a payload by SHA256 hash |
-| `export` | Download a bulk data export |
-| `submit` | Report malware distribution URLs |
-| `version` | Print version information |
-
-### Recent additions
-
-URLhaus keeps the last three days, and returns at most 1000 entries.
+## Examples
 
 ```bash
-# Recent malware URLs
 urlhs recent -urls -limit 50
-
-# Recent payloads collected from those URLs
 urlhs recent -payloads -limit 50
-```
-
-### Looking things up
-
-```bash
-# By URL
 urlhs query -url "http://example.com/malware.exe"
-
-# By the URLhaus database ID, when you have one
-urlhs query -urlid 233833
-
-# By host, which can be a domain, hostname or IPv4 address
 urlhs query -host example.com
-
-# By payload hash, MD5 or SHA256
-urlhs query -hash 12c8aec5766ac3e6f26f2505e2f4a8f2
-
-# By tag
 urlhs query -tag Emotet
-
-# By malware signature, which the reporter cannot influence
-urlhs query -signature Gozi
-```
-
-A payload carries its hashes under `md5_hash` and `sha256_hash`, and its size under `file_size`. URLhaus spells these two different ways depending on the endpoint, so urlhs normalises them onto the documented names.
-
-### Downloading payloads
-
-```bash
-urlhs download -sha256 <sha256_hash>
-
-# Choose where it lands
 urlhs download -sha256 <hash> -out /tmp/sample.zip
-```
-
-Without `-out` the file is written to `<sha256>.zip` in the current directory, and urlhs will not overwrite a file that already exists.
-
-Unlike MalwareBazaar, URLhaus does not password protect these archives. Your antivirus will most likely quarantine the file the moment it lands, so download somewhere you have excluded from scanning.
-
-### Bulk exports
-
-```bash
-# List the export files and what each one holds
-urlhs export -h
-
-# Hostnames serving malware, in hosts file format
-urlhs export -file hostfile.txt
-
-# The full dump takes longer than the default timeout allows
+urlhs submit -url http://evil.example/payload.exe -tags exe,AgentTesla
 urlhs -t 10m export -file full.csv.zip -out /tmp/urlhaus.csv.zip
 ```
 
-URLhaus publishes CSV and JSON dumps of recent, online and all URLs, plain URL lists, a hosts file, a DNS RPZ zone, a Snort/Suricata ruleset, ClamAV signatures, and a list of every payload it has collected. abuse.ch rebuilds them every five minutes, so fetching more often gets you the same file.
+## Notes
 
-The timeout covers the whole download. Most exports are tens of megabytes and `payload.csv.zip` is around 800 MB, so raise `-t` for anything but the small text files. Without `-out` the file keeps its export name, and urlhs will not overwrite a file that already exists.
+- URLhaus keeps three days of data and returns at most 1000 entries.
+- Downloads are ZIP files without password protection. Antivirus may quarantine them.
+- Read the [submission policy](https://urlhaus.abuse.ch/api/#submit) before submitting.
+- Exports rebuild every five minutes. `payload.csv.zip` is about 800 MB.
+- Large exports need a longer `-t` timeout.
 
-abuse.ch expects the API key inside the export URL. urlhs strips the URL from its error messages so the key does not end up in your logs.
-
-### Submitting URLs
-
-Read the [submission policy](https://urlhaus.abuse.ch/api/#submit) first. URLhaus only takes URLs that are online and serving a malware payload. Phishing pages, adware and URL shorteners get deleted.
-
-```bash
-urlhs submit -url http://evil.example/payload.exe -tags exe,AgentTesla
-
-# Several URLs at once, with your handle hidden
-urlhs submit -url http://evil.example/a.exe -url http://evil.example/b.doc -anonymous
-```
-
-The tags apply to every URL in the submission and may contain letters, digits, dots, dashes and spaces. URLhaus has to know your abuse.ch account before it accepts submissions. If urlhs says it does not, log in once at [urlhaus.abuse.ch](https://urlhaus.abuse.ch/login/) and try again. The API does not document its replies, so urlhs prints whatever URLhaus answers.
-
-### Running in a container
+## Container
 
 ```bash
 docker run --rm -e ABUSECH_API_KEY="your_key" ghcr.io/andpalmier/urlhs recent -urls -limit 10
-
-podman run --rm -e ABUSECH_API_KEY="your_key" ghcr.io/andpalmier/urlhs recent -urls -limit 10
-
-container run --rm -e ABUSECH_API_KEY="your_key" ghcr.io/andpalmier/urlhs recent -urls -limit 10
+docker run --rm -e ABUSECH_API_KEY="your_key" -v "$PWD":/data ghcr.io/andpalmier/urlhs download -sha256 <hash> -out /data/sample.zip
 ```
-
-Downloads and exports need a mounted volume, otherwise the file disappears with the container:
-
-```bash
-docker run --rm -e ABUSECH_API_KEY="your_key" -v $(pwd):/data ghcr.io/andpalmier/urlhs download -sha256 <hash> -out /data/sample.zip
-```
-
-## Environment variables
-
-| Variable | Description |
-|----------|-------------|
-| `ABUSECH_API_KEY` | Your abuse.ch API key. Required. |
 
 ## License
 
-Licensed under the AGPLv3. See [LICENSE](LICENSE) for the full text.
-
-## Acknowledgments
-
-- [URLhaus](https://urlhaus.abuse.ch) by abuse.ch
-- [abuse.ch](https://abuse.ch) for their work against malware
+AGPLv3. See [LICENSE](LICENSE).

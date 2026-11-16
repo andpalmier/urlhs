@@ -79,6 +79,7 @@ func TestValidateURL(t *testing.T) {
 		{"valid http", "http://example.com/malware.exe", false},
 		{"valid https", "https://example.com/malware.exe", false},
 		{"valid ip", "http://1.2.3.4/bin.sh", false},
+		{"embedded credentials", "http://user:pass@evil.example/x", true},
 		{"no scheme", "example.com/malware.exe", true},
 		{"ftp", "ftp://example.com", true}, // Assuming validation rejects non-http/https
 		{"empty", "", true},
@@ -89,5 +90,32 @@ func TestValidateURL(t *testing.T) {
 				t.Errorf("ValidateURL() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
+	}
+}
+
+func TestAdditionalValidators(t *testing.T) {
+	if got, err := ValidateHash("d41d8cd98f00b204e9800998ecf8427e"); err != nil || got != "md5" {
+		t.Errorf("ValidateHash(md5) = %q, %v", got, err)
+	}
+	if _, err := ValidateHash("bad"); err == nil {
+		t.Error("bad hash accepted")
+	}
+	if err := ValidateHost(""); err == nil {
+		t.Error("empty host accepted")
+	}
+	if err := ValidateHost("nodot"); err == nil {
+		t.Error("host without dot accepted")
+	}
+	if err := ValidateURLID("12x"); err == nil {
+		t.Error("non-numeric URL ID accepted")
+	}
+	if err := ValidateSignature(""); err == nil {
+		t.Error("empty signature accepted")
+	}
+	if err := ValidateLimit(-1); err == nil {
+		t.Error("negative limit accepted")
+	}
+	if err := ValidateLimit(1001); err == nil {
+		t.Error("oversized limit accepted")
 	}
 }

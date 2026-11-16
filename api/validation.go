@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"net/url"
 	"regexp"
 	"strings"
 )
@@ -66,8 +67,15 @@ func ValidateURL(urlStr string) error {
 	if len(urlStr) > 4096 {
 		return fmt.Errorf("URL too long: maximum 4096 characters")
 	}
-	if !strings.HasPrefix(urlStr, "http://") && !strings.HasPrefix(urlStr, "https://") {
-		return fmt.Errorf("URL must start with http:// or https://")
+	if strings.ContainsAny(urlStr, " \t\r\n") {
+		return fmt.Errorf("URL must not contain whitespace")
+	}
+	u, err := url.Parse(urlStr)
+	if err != nil || (u.Scheme != "http" && u.Scheme != "https") || u.Host == "" {
+		return fmt.Errorf("URL must be a valid http:// or https:// URL")
+	}
+	if u.User != nil {
+		return fmt.Errorf("URL must not contain credentials")
 	}
 	return nil
 }
